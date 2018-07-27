@@ -3,6 +3,8 @@ package com.company;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Main {
@@ -148,7 +150,7 @@ public class Main {
         int a = 1;
         int b = x + 1;
         while (b - a > 1) {
-            int ab = (a + b) / 2;
+            int ab = (int) (a * 1.0 / 2 + b * 1.0 / 2);
             int x1 = x;
             for (int i = 0; i < m - 1; i++) {
                 x1 /= ab;
@@ -160,19 +162,19 @@ public class Main {
         return a;
     }
 
-    private static void CalculateRootFromNaturalNumber(int max) {
+    private static void CalculateRootFromNaturalNumber() {
         try {
-            System.out.print(String.format("Введите число от 0 до %d: ", max));
+            System.out.print(String.format("Введите число от 0 до %d: ", Integer.MAX_VALUE - 2));
             int x = Integer.parseInt(bufferedReader.readLine());
             System.out.print("Введите степень > 0: ");
             int m = Integer.parseInt(bufferedReader.readLine());
-            if (x >= 0 && x <= max && m > 0) {
+            if (x >= 0 && x <= Integer.MAX_VALUE - 2 && m > 0) {
                 int root = RootFromNaturalNumber(x, m);
                 System.out.println(String.format("Корень степеи %d из числа %d: %d", m, x, root));
                 System.out.println(String.format("Остаток: %d", Rest(root, x, m)));
             } else throw new Exception();
         } catch (Exception e) {
-            CalculateRootFromNaturalNumber(max);
+            CalculateRootFromNaturalNumber();
         }
     }
 
@@ -223,6 +225,11 @@ public class Main {
 
     private static void PrintMassiv(int[] a) {
         for (int item : a) System.out.print(String.format("%d ", item));
+        System.out.println();
+    }
+
+    private static void PrintIntegerList(List<Integer> list) {
+        for (int item : list) System.out.print(String.format("%d ", item));
         System.out.println();
     }
 
@@ -495,6 +502,672 @@ public class Main {
         }
     }
 
+
+    private static void CalculateBilliards() {
+        try {
+            System.out.print(String.format("Введите  a от 1 до %d: ", Integer.MAX_VALUE));
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a > 0) {
+                System.out.print(String.format("Введите число b от 1 до %d: ", Integer.MAX_VALUE));
+                int b = Integer.parseInt(bufferedReader.readLine());
+                if (b > 0) {
+
+                    System.out.println(String.format("Число отрезков: %d", Billiards(a, b)));
+                } else throw new Exception();
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateBilliards();
+        }
+    }
+
+    private static int Billiards(int a, int b) {
+        int max, min;
+        if (a >= b) {
+            max = a;
+            min = b;
+        } else {
+            max = b;
+            min = a;
+        }
+        int n = 0;
+        int d = min;
+        while (d != 0) {
+            d = max - d;
+            n++;
+            while (d >= min) {
+                d -= min;
+                n++;
+            }
+            if (d != 0) {
+                d = min - d;
+                n++;
+            }
+        }
+        return n;
+    }
+
+    private static void CalculateDividers() {
+        try {
+            System.out.print(String.format("Введите число от 1 до %d: ", Integer.MAX_VALUE));
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a > 0) {
+                System.out.print("Делители: ");
+                Dividers(a, 1);
+                System.out.println();
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateDividers();
+        }
+    }
+
+    private static void Dividers(int n, int d) {
+        while (n % d != 0 && d * d < n) {
+            d++;
+        }
+        if (d * d <= n) {
+            System.out.print(String.format("%d ", d));
+            int dd = (int) (n * 1.0 / d);
+            if (d != dd) {
+                Dividers(n, d + 1);
+                System.out.print(String.format("%d ", dd));
+            }
+        }
+    }
+
+    private static void CalculateMultipliers() {
+        try {
+            System.out.print(String.format("Введите число от 2 до %d: ", Integer.MAX_VALUE));
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a > 1) {
+                System.out.print("Множители: ");
+                Multipliers(a);
+                System.out.println();
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateMultipliers();
+        }
+    }
+
+    private static void Multipliers(int n) {
+        while (n % 2 == 0) {
+            System.out.print(String.format("%d ", 2));
+            n /= 2;
+        }
+        int i = 3;
+        while (i <= n) {
+            if (n % i == 0) {
+                System.out.print(String.format("%d ", i));
+                n /= i;
+            } else i += 2;
+        }
+    }
+
+    private static void CalculateErastofen() {
+        try {
+            System.out.print(String.format("Введите правую границу диапозона от 2 до %d: ", Integer.MAX_VALUE));
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a > 1) {
+                System.out.print("Простые числа: ");
+                Erastofen(a, true);
+                System.out.println();
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateErastofen();
+        }
+    }
+
+    private static boolean[] Erastofen(int n, boolean show) {
+        int len = (int) (n * 1.0 / 2);
+        boolean[] s = new boolean[n + 1];
+        for (int i = 2; i < len; i++) {
+            if (!s[i]) {
+                int j = i + i;
+                while (j <= n) {
+                    s[j] = true;
+                    j += i;
+                }
+            }
+        }
+        if (show) {
+            for (int i = 2; i < s.length; i++) {
+                if (!s[i])
+                    System.out.print(String.format("%d ", i));
+            }
+        }
+        return s;
+    }
+
+    private static void CalculateTwins() {
+        try {
+            System.out.print(String.format("Введите правую границу диапозона от 5 до %d: ", Integer.MAX_VALUE));
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a >= 5) {
+                System.out.print("Близнецы: ");
+                Twins(a);
+                System.out.println();
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateTwins();
+        }
+    }
+
+    private static void Twins(int n) {
+        boolean[] s = Erastofen(n, false);
+        for (int i = 5; i <= n; i += 2) {
+            if (!s[i - 2] && !s[i - 4]) {
+                System.out.print(String.format("(%d, %d) ", i - 2, i));
+            }
+        }
+    }
+
+    private static void CalculateCloth() {
+        try {
+            System.out.print(String.format("Введите правую границу диапозона от 2 до %d: ", RootFromNaturalNumber(Integer.MAX_VALUE - 1, 2)));
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a >= 2) {
+                System.out.println("Скатерть: ");
+                Cloth(a);
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateCloth();
+        }
+    }
+
+    private static void Cloth(int m) {
+        boolean[] s = Erastofen(m * m, false);
+        int x = (int) (m * 1.0 / 2) - 1;
+        int y = x;
+        boolean[][] cloth = new boolean[m][m];
+        cloth[x][y] = true;
+        cloth[x + 1][y] = s[2];
+        cloth[x + 1][y + 1] = s[3];
+        cloth[x][y + 1] = s[4];
+        int d = 1;
+        int k = 4;
+        y++;
+        do {
+            x--;
+            y++;
+            d += 2;
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < d; j++) {
+                    switch (i) {
+                        case 0:
+                            y--;
+                            break;
+                        case 1:
+                            x++;
+                            break;
+                        case 2:
+                            y++;
+                            break;
+                        case 3:
+                            x--;
+                            break;
+                    }
+                    k++;
+                    cloth[x][y] = s[k];
+                }
+            }
+        } while (d != m - 1);
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = 0; j < m; j++) {
+                if (!cloth[j][i]) {
+                    System.out.print("*");
+                } else System.out.print("+");
+            }
+            System.out.println();
+        }
+    }
+
+    private static void CalculatePerfectNumbers() {
+        try {
+            System.out.print("Введите верхнюю границу диапозона от 2 до 40000000: ");
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a >= 2 && a <= 40000000) {
+                System.out.print("Совершенные числа: ");
+                PerfectNumbers(a);
+                System.out.println();
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculatePerfectNumbers();
+        }
+    }
+
+    private static void PerfectNumbers(int n) {
+        int[] a = new int[n + 1];
+        for (int i = 2; i <= n; i++) {
+            a[i] = 1;
+        }
+        int len = (int) (n * 1.0 / 2);
+        for (int i = 2; i <= len; i++) {
+            int p = i + i;
+            while (p <= n) {
+                a[p] += i;
+                p += i;
+            }
+        }
+        for (int i = 2; i <= n; i++) {
+            if (a[i] == i) {
+                System.out.print(String.format("%d ", i));
+            }
+        }
+    }
+
+    private static void CalculateFriendlyNumbers() {
+        try {
+            System.out.print("Введите верхнюю границу диапозона от 2 до 40000000: ");
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a >= 2 && a <= 40000000) {
+                System.out.print("Дружественые числа: ");
+                FriendlyNumbers(a);
+                System.out.println();
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateFriendlyNumbers();
+        }
+    }
+
+    private static void FriendlyNumbers(int n) {
+        int[] a = new int[n + 1];
+        for (int i = 2; i <= n; i++) {
+            a[i] = 1 + i;
+        }
+        int len = (int) (n * 1.0 / 2);
+        for (int i = 2; i <= len; i++) {
+            int p = i + i;
+            while (p <= n) {
+                a[p] += i;
+                p += i;
+            }
+        }
+        for (int i = 2; i <= n - 1; i++) {
+            for (int j = i + 1; j <= n; j++) {
+                if (a[i] == i + j && a[j] == i + j) {
+                    System.out.print(String.format("(%d, %d) ", i, j));
+                }
+            }
+        }
+    }
+
+    private static void CalculateAutoMorfNumbers() {
+        try {
+            System.out.print(String.format("Введите степень от 2 до %d: ", Integer.MAX_VALUE));
+            int m = Integer.parseInt(bufferedReader.readLine());
+            if (m >= 2) {
+                int max = (int) (Math.pow(Integer.MAX_VALUE, 1.0 / m));
+                System.out.print(String.format("Введите нижнюю границу диапозона от 1 до %d: ", max));
+                int a = Integer.parseInt(bufferedReader.readLine());
+                if (a >= 1 && a <= max) {
+                    System.out.print(String.format("Введите верхнюю границу диапозона от %d до %d: ", a, max));
+                    int b = Integer.parseInt(bufferedReader.readLine());
+                    if (b >= a && b <= max) {
+                        System.out.print("Автоморфные числа: ");
+                        AutoMorfNumbers(a, b, m);
+                        System.out.println();
+                    } else throw new Exception();
+                } else throw new Exception();
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateAutoMorfNumbers();
+        }
+    }
+
+    private static int CifraCount(int a) {
+        int k = 0;
+        do {
+            k++;
+            a = (int) (a * 1.0 / 10);
+        } while (a != 0);
+        return k;
+    }
+
+    private static int CifraSum(int a) {
+        int s = 0;
+        do {
+            s += a % 10;
+            a = (int) (a * 1.0 / 10);
+        } while (a != 0);
+        return s;
+    }
+
+
+    private static void AutoMorfNumbers(int a, int b, int m) {
+        for (int i = a; i <= b; i++) {
+            int d = (int) Math.pow((double) 10, (double) CifraCount(i));
+            int k = (int) Math.pow((double) i, (double) m);
+            if (k % d == i) {
+                System.out.print(String.format("(%d, %d) ", i, k));
+            }
+        }
+    }
+
+    private static void CalculateNumberingOfPages() {
+        try {
+            System.out.print("Введите число страниц от 2 до 250954972: ");
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a >= 2 && a <= 250954972) {
+                System.out.println(String.format("Число цифр: %d", NumberingOfPages(a)));
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateNumberingOfPages();
+        }
+    }
+
+    private static int NumberingOfPages(int n) {
+        int sum = 0;
+        int min = 1;
+        int max = 9;
+        int count = CifraCount(n);
+        for (int i = 1; i <= count - 1; i++) {
+            sum += (max - min + 1) * i;
+            min *= 10;
+            max = min * 10 - 1;
+        }
+        return sum + (n - min + 1) * count;
+    }
+
+    private static void CalculateCubeSum() {
+        try {
+            System.out.print(String.format("Введите нижнюю границу диапозона от 0 до %d: ", Integer.MAX_VALUE));
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a >= 0) {
+                System.out.print(String.format("Введите верхнюю границу диапозона от %d до %d: ", a, Integer.MAX_VALUE));
+                int b = Integer.parseInt(bufferedReader.readLine());
+                if (b >= a) {
+                    System.out.print("Числа: ");
+                    PrintIntegerList(CubeSum(a, b));
+                } else throw new Exception();
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateAutoMorfNumbers();
+        }
+
+    }
+
+    private static List<Integer> CubeSum(int a, int b) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = a; i <= b; i++) {
+            if (i == Cube(CifraSum(i))) {
+                list.add(i);
+            }
+        }
+        return list;
+    }
+
+    private static void CalculateNumbersArmstrong() {
+        try {
+            System.out.print("Введите число знаков от 2 до 10: ");
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a >= 2 && a <= 10) {
+                System.out.print("Числа Армстронга: ");
+                PrintIntegerList(NumbersArmstrongAll(a));
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateNumbersArmstrong();
+        }
+    }
+
+    private static List<Integer> NumbersArmstrongAll(int n) {
+        List<Integer> list = new ArrayList<>();
+        for (int i = 2; i <= n; i++) {
+            list.addAll(NumbersArmstrong(i));
+        }
+        return list;
+    }
+
+    private static List<Integer> NumbersArmstrong(int n) {
+        List<Integer> list = new ArrayList<>();
+        int[] step = new int[10];
+        for (int i = 0; i < step.length; i++) {
+            step[i] = i;
+            for (int j = 2; j <= n; j++) {
+                step[i] *= i;
+            }
+        }
+        int min = 1;
+        for (int i = 1; i < n; i++) {
+            min = min * 10;
+        }
+        int max;
+        if (n == 10) {
+            max = Integer.MAX_VALUE;
+        } else max = min * 10 - 1;
+        for (int i = min; i <= max; i++) {
+            int p = i;
+            int sum = 0;
+            for (int j = 1; j <= n; j++) {
+                sum += step[p % 10];
+                p = (int) (p * 1.0 / 10);
+            }
+            if (sum == i)
+                list.add(i);
+        }
+        return list;
+    }
+
+    private static void CalculateZ42() {
+        try {
+            System.out.print("Введите число от 2 до 9: ");
+            int a = Integer.parseInt(bufferedReader.readLine());
+            if (a >= 2 && a <= 10) {
+                System.out.print("Число: ");
+                Z42(a);
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateZ42();
+        }
+    }
+
+    private static void Z42(int n) {
+        int a = n;
+        do {
+            int b = (int) (a * 1.0 / n);
+            System.out.print(b);
+            a = (a % n) * 10 + b;
+        } while (a != n);
+    }
+
+    private static void CalculateDecimal() {
+        try {
+            System.out.print("Введите числитель: ");
+            int a = Integer.parseInt(bufferedReader.readLine());
+            System.out.print("Введите знаменатель > 0: ");
+            int b = Integer.parseInt(bufferedReader.readLine());
+            if (b > 0) {
+                System.out.print(String.format("Число: %s", Decimal(new Decimal(a, b))));
+            } else throw new Exception();
+        } catch (Exception e) {
+            CalculateDecimal();
+        }
+    }
+
+    private static int[] Period(Decimal decimal, int max) {
+        int[] ost = new int[max + 1];
+        for (int i = 0; i <= max; i++) {
+            ost[i] = 0;
+        }
+        int[] mas = new int[2];
+        mas[0] = max;
+        mas[1] = 0;
+        do {
+            mas[1]++;
+            ost[decimal.getNumerator()] = mas[1];
+            decimal.setNumerator((decimal.getNumerator() * 10) % decimal.getDenominator());
+        } while (ost[decimal.getNumerator()] == 0);
+        if (decimal.getNumerator() == 0)
+            mas[1]--;
+        else mas[0] = ost[decimal.getNumerator()];
+        return mas;
+    }
+
+    private static String Decimal(Decimal decimal) {
+        String s = "";
+        if (decimal.getNumerator() < 0) {
+            s = "-";
+            decimal.setNumerator(Math.abs(decimal.getNumerator()));
+        }
+        s = s.concat(String.valueOf((int) (decimal.getNumerator() * 1.0 / decimal.getDenominator()))).concat(".");
+        decimal.setNumerator(decimal.getNumerator() % decimal.getDenominator());
+        int max = 100;
+        int[] mas = Period(decimal, max);
+        for (int i = 1; i <= mas[1]; i++) {
+            if (i == mas[0]) s = s.concat("(");
+            s = s.concat(String.valueOf((decimal.getNumerator() * 10) / decimal.getDenominator()));
+            decimal.setNumerator((decimal.getNumerator() * 10) % decimal.getDenominator());
+        }
+        if (mas[0] != max) s = s.concat(")");
+        return s;
+    }
+
+    private static void CalculateHeightSound() {
+
+        boolean flag;
+        HeightSound heightSound = new HeightSound();
+        do {
+            System.out.print("Введите октаву: ");
+            try {
+                int a = Integer.parseInt(bufferedReader.readLine());
+                switch (a) {
+                    case 0:
+                        heightSound.setOctave(Octave.SubContrOctave);
+                        flag = false;
+                        break;
+                    case 1:
+                        heightSound.setOctave(Octave.ContrOctave);
+                        flag = false;
+                        break;
+                    case 2:
+                        heightSound.setOctave(Octave.Large);
+                        flag = false;
+                        break;
+                    case 3:
+                        heightSound.setOctave(Octave.Small);
+                        flag = false;
+                        break;
+                    case 4:
+                        heightSound.setOctave(Octave.First);
+                        flag = false;
+                        break;
+                    case 5:
+                        heightSound.setOctave(Octave.Second);
+                        flag = false;
+                        break;
+                    case 6:
+                        heightSound.setOctave(Octave.Third);
+                        flag = false;
+                        break;
+                    case 7:
+                        heightSound.setOctave(Octave.Fourth);
+                        flag = false;
+                        break;
+                    case 8:
+                        heightSound.setOctave(Octave.Fifth);
+                        flag = false;
+                        break;
+                    default:
+                        flag = true;
+                        break;
+                }
+            } catch (Exception e) {
+                flag = true;
+            }
+        } while (flag);
+        do {
+            System.out.print("Введите звук: ");
+            try {
+                int a = Integer.parseInt(bufferedReader.readLine());
+                switch (a) {
+                    case 0:
+                        heightSound.setSound(Sound.Do);
+                        flag = false;
+                        break;
+                    case 1:
+                        heightSound.setSound(Sound.Re);
+                        flag = false;
+                        break;
+                    case 2:
+                        heightSound.setSound(Sound.Mi);
+                        flag = false;
+                        break;
+                    case 3:
+                        heightSound.setSound(Sound.Fa);
+                        flag = false;
+                        break;
+                    case 4:
+                        heightSound.setSound(Sound.Solt);
+                        flag = false;
+                        break;
+                    case 5:
+                        heightSound.setSound(Sound.Lya);
+                        flag = false;
+                        break;
+                    case 6:
+                        heightSound.setSound(Sound.Si);
+                        flag = false;
+                        break;
+                    default:
+                        flag = true;
+                        break;
+                }
+            } catch (Exception e) {
+                flag = true;
+            }
+        } while (flag);
+        do {
+            System.out.print("Введите прибавку: ");
+            try {
+                int a = Integer.parseInt(bufferedReader.readLine());
+                switch (a) {
+                    case 0:
+                        heightSound.setSignsOfAlteration(SignsOfAlteration.Diez);
+                        flag = false;
+                        break;
+                    case 1:
+                        heightSound.setSignsOfAlteration(SignsOfAlteration.Bemol);
+                        flag = false;
+                        break;
+                    case 2:
+                        heightSound.setSignsOfAlteration(SignsOfAlteration.No);
+                        flag = false;
+                        break;
+                    default:
+                        flag = true;
+                        break;
+                }
+            } catch (Exception e) {
+                flag = true;
+            }
+        } while (flag);
+        System.out.println(String.format("Частота: %f", Frequency(heightSound)));
+    }
+
+    private static double Frequency(HeightSound heightSound) {
+        double frequency = 440;
+        double semitone = 1.05946;
+        for (int i = Octave.First.ordinal() - 1; i >= heightSound.getOctave().ordinal(); i--) {
+            frequency /= 2;
+        }
+        for (int i = Octave.First.ordinal() + 1; i <= heightSound.getOctave().ordinal(); i++) {
+            frequency *= 2;
+        }
+        if (heightSound.getSound().equals(Sound.Si))
+            frequency *= semitone * semitone;
+        else {
+            for (int i = Sound.Lya.ordinal() - 1; i >= heightSound.getSound().ordinal(); i--) {
+                if (i == Sound.Mi.ordinal())
+                    frequency /= semitone;
+                else frequency /= (semitone * semitone);
+            }
+        }
+        if (heightSound.getSignsOfAlteration().equals(SignsOfAlteration.Diez))
+            frequency*=semitone;
+        else if (heightSound.getSignsOfAlteration().equals(SignsOfAlteration.Bemol))
+            frequency/=semitone;
+        return frequency;
+    }
+
+
     private static int Input() {
         try {
             System.out.print("Выберите пункт меню: ");
@@ -506,8 +1179,7 @@ public class Main {
         }
     }
 
-
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
         bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         boolean lock = true;
         while (lock) {
@@ -526,6 +1198,21 @@ public class Main {
             System.out.println("21. НОД");
             System.out.println("22. Взаимно простые числа");
             System.out.println("23. НОК");
+            System.out.println("24. Бильярд");
+            System.out.println("25. Делители");
+            System.out.println("28. Разложение на простые множители");
+            System.out.println("29. Эрастофеново решето");
+            System.out.println("30. Близнецы");
+            System.out.println("31. Скатерть Улама");
+            System.out.println("32. Совершенные числа");
+            System.out.println("33. Дружественные числа");
+            System.out.println("35. Автоморфные числа");
+            System.out.println("36. Нумерация книжных страниц");
+            System.out.println("38. Сумма кубов цифр");
+            System.out.println("39. Числа Армстронга");
+            System.out.println("42. Перестановка с уменьшением");
+            System.out.println("52. Десятичные дроби");
+            System.out.println("55. Высота музыкального звука");
             System.out.println("0. Выход");
             switch (Input()) {
                 case 0:
@@ -545,7 +1232,7 @@ public class Main {
                     CalculateRootFromNumber();
                     break;
                 case 8:
-                    CalculateRootFromNaturalNumber(Integer.MAX_VALUE - 2);
+                    CalculateRootFromNaturalNumber();
                     break;
                 case 11:
                     CalculateTriangleOfPascal();
@@ -574,10 +1261,58 @@ public class Main {
                 case 23:
                     CalculateNOK();
                     break;
+                case 24:
+                    CalculateBilliards();
+                    break;
+                case 25:
+                    CalculateDividers();
+                    break;
+                case 28:
+                    CalculateMultipliers();
+                    break;
+                case 29:
+                    CalculateErastofen();
+                    break;
+                case 30:
+                    CalculateTwins();
+                    break;
+                case 31:
+                    CalculateCloth();
+                    break;
+                case 32:
+                    CalculatePerfectNumbers();
+                    break;
+                case 33:
+                    CalculateFriendlyNumbers();
+                    break;
+                case 35:
+                    CalculateAutoMorfNumbers();
+                    break;
+                case 36:
+                    CalculateNumberingOfPages();
+                    break;
+                case 38:
+                    CalculateCubeSum();
+                    break;
+                case 39:
+                    CalculateNumbersArmstrong();
+                    break;
+                case 42:
+                    CalculateZ42();
+                    break;
+                case 52:
+                    CalculateDecimal();
+                    break;
+                case 55:
+                    CalculateHeightSound();
+                    break;
                 default:
                     break;
             }
-            bufferedReader.readLine();
+            try {
+                bufferedReader.readLine();
+            } catch (IOException e) {
+            }
         }
     }
 }
